@@ -1,6 +1,6 @@
 import {applyMiddleware, createStore} from "redux";
+import {reducer} from './catalogReducer'
 import {composeWithDevTools} from "redux-devtools-extension";
 import thunk from "redux-thunk";
-import {catalogReducer} from "./catalogReducer";
 
-export const store = createStore(catalogReducer,composeWithDevTools(applyMiddleware(thunk)))
+export const store =createStore(reducer, composeWithDevTools(applyMiddleware(thunk)))
