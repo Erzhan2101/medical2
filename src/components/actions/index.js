@@ -7,9 +7,9 @@ export const getProjects = () => {
     }
 }
 
-export const addProject = (data) => {
+export const addProject = (project) => {
     return (dispatch) => {
-axios.post('https://614af56ce4cc2900179eae02.mockapi.io/api/gallery', data)
+axios.post('https://614af56ce4cc2900179eae02.mockapi.io/api/gallery', project)
     .then(({data}) => dispatch({type: 'ADD_PROJECT', payload: data}))
     }
 }

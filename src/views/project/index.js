@@ -7,11 +7,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {addProject, getProjects} from "../../components/actions";
 import {useFormik} from "formik";
 import * as yup from 'yup'
-import {useForm} from "react-hook-form";
 
 const Project = () => {
     const [isOpen, setIsOpen] = useState(false)
-    const {handleSubmit, register} = useForm()
     const [image, setImage] = useState({})
     const [cName, setClassName] = useState('jsGridView');
 
@@ -23,27 +21,23 @@ const Project = () => {
             title: '',
             author: '',
             startDate: '',
-            finishDate: '',
+            expirationDate: '',
             image: ''
         },
         validationSchema: yup.object({
             title: yup.string().max(15, 'Должно быть не более 15 символов.').required('Обязательное поле'),
-            author: yup.string().max(20, 'Must be 20 character or less').required('Required'),
-            startDate: yup.string().required("Choose date"),
-            finishDate: yup.string().required("Choose date"),
+            author: yup.string().max(20, 'Должно быть не более 20 символов.').required('Обязательное поле'),
+            startDate: yup.string().required("Выбирите дату"),
+            expirationDate: yup.string().required("Выбирите дату"),
+            image: yup.string().required("Выбирите файл"),
         }),
-        onSubmit: values => {
-            dispatch(values)
+        onSubmit: data => {
+            data.img = image.url
+            dispatch(addProject(data))
             setIsOpen(false)
         }
     })
 
-
-    // const onSubmit = (data) => {
-    //     data.img = image.url
-    //     dispatch(addProject(data))
-    //     setIsOpen(false)
-    // }
 
     useEffect(() => {
         dispatch(getProjects())
@@ -106,14 +100,15 @@ const Project = () => {
                                 <div className="flex-modal">
                                     <button className="close-modal" onClick={() => setIsOpen(false)}>×</button>
                                     <label htmlFor='img'>Добавить фото</label>
-                                    <input className="modal-input input-img" {...register("img", {required: true})}
+                                    <input className="modal-input input-img"
                                            id='img'
+                                           name='image'
                                            onChange={e => {
                                                handleChange(e)
                                                formik.handleChange(e)
                                            }}
                                            type="file"/>
-                                    {formik.touched.title && formik.errors.title ? (<div>{formik.errors.title}</div>) : null}
+                                    {formik.touched.image && formik.errors.image ? (<div className='text-danger'>{formik.errors.image}</div>) : null}
 
                                     <label htmlFor='title'>Название</label>
                                     {/*<input className="modal-input" {...register("title", {required: true})} id="title"*/}
@@ -128,7 +123,7 @@ const Project = () => {
                                            placeholder="название"
                                     />
                                     {formik.touched.title && formik.errors.title ? (
-                                        <div>{formik.errors.title}</div>
+                                        <div className='text-danger'>{formik.errors.title}</div>
                                     ) : null}
 
                                     <label htmlFor='author'>Автор</label>
@@ -143,8 +138,8 @@ const Project = () => {
                                            value={formik.values.author}
                                            placeholder="имя автора"
                                     />
-                                    {formik.touched.title && formik.errors.title ? (
-                                        <div>{formik.errors.title}</div>
+                                    {formik.touched.author && formik.errors.author ? (
+                                        <div className='text-danger'>{formik.errors.author}</div>
                                     ) : null}
 
                                     <div className="grid-date">
@@ -160,8 +155,8 @@ const Project = () => {
                                                    onBlur={formik.handleBlur}
                                                    value={formik.values.startDate}
                                             />
-                                            {formik.touched.title && formik.errors.title ? (
-                                                <div>{formik.errors.title}</div>
+                                            {formik.touched.startDate && formik.errors.startDate ? (
+                                                <div className='text-danger'>{formik.errors.startDate}</div>
                                             ) : null}
 
                                         </div>
@@ -175,10 +170,10 @@ const Project = () => {
                                                    name='expirationDate'
                                                    onChange={formik.handleChange}
                                                    onBlur={formik.handleBlur}
-                                                   value={formik.values.finishDate}
+                                                   value={formik.values.expirationDate}
                                             />
-                                            {formik.touched.title && formik.errors.title ? (
-                                                <div>{formik.errors.title}</div>
+                                            {formik.touched.expirationDate && formik.errors.expirationDate ? (
+                                                <div className='text-danger'>{formik.errors.expirationDate}</div>
                                             ) : null}
 
                                         </div>
